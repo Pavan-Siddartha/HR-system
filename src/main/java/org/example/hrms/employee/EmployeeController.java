@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.hrms.employee.dto.NewHireRequest;
 import org.example.hrms.employee.EmployeeService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,8 @@ public class EmployeeController {
     //  Hire Employee
     @PostMapping("/hire")
     public ResponseEntity<EmployeeEntity> hireEmployee(@Valid @RequestBody NewHireRequest dto) {
-        return ResponseEntity.ok(employeeService.hireEmployee(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).
+                body(employeeService.hireEmployee(dto));
     }
 
     // Get Employee By ID

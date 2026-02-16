@@ -22,9 +22,6 @@ public class EmployeeService {
     private final DesignationRepository designationRepository;
     private final EmployeeJobHistoryRepository jobHistoryRepository;
 
-    /* =========================
-       1️⃣ HIRE EMPLOYEE
-       ========================= */
     @Transactional
     public EmployeeEntity hireEmployee(NewHireRequest request) {
 
@@ -72,24 +69,15 @@ public class EmployeeService {
         return employee;
     }
 
-    /* =========================
-       2️⃣ GET EMPLOYEE BY ID
-       ========================= */
     public EmployeeEntity getEmployeeById(Long id) {
         return employeeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
     }
 
-    /* =========================
-       3️⃣ GET ALL EMPLOYEES
-       ========================= */
     public List<EmployeeEntity> getAllEmployees() {
         return employeeRepository.findAll();
     }
 
-    /* =========================
-       4️⃣ PROMOTE EMPLOYEE
-       ========================= */
     @Transactional
     public EmployeeEntity promoteEmployee(Long employeeId, Long newDesignationId) {
 
@@ -113,9 +101,6 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    /* =========================
-       5️⃣ TRANSFER EMPLOYEE
-       ========================= */
     @Transactional
     public EmployeeEntity transferEmployee(Long employeeId, Long newDepartmentId) {
 
@@ -139,9 +124,6 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    /* =========================
-       6️⃣ RESIGN EMPLOYEE
-       ========================= */
     @Transactional
     public EmployeeEntity resignEmployee(Long employeeId) {
 
@@ -159,9 +141,6 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    /* =========================
-       7️⃣ UPDATE PROFILE
-       ========================= */
     @Transactional
     public EmployeeEntity updateEmployee(Long employeeId, NewHireRequest request) {
 
@@ -175,9 +154,7 @@ public class EmployeeService {
         return employeeRepository.save(employee);
     }
 
-    /* =========================
-       🔒 PRIVATE HELPER
-       ========================= */
+
     private void closeCurrentJobHistory(EmployeeEntity employee) {
 
         jobHistoryRepository.findByEmployeeId(employee.getId()).stream()
