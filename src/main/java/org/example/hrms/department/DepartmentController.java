@@ -48,7 +48,7 @@ public class DepartmentController {
         return departmentService.updateDepartment(id, request);
     }
 
-    @PatchMapping("/{id}/deactivate")
+    @PostMapping("/{id}/deactivate")
     public void deactivateDepartment(@PathVariable Long id) {
         departmentService.deactivateDepartment(id);
     }
