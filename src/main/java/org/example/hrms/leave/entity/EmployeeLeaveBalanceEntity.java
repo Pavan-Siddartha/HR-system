@@ -1,10 +1,10 @@
-package org.example.hrms.leave;
+package org.example.hrms.leave.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
 import lombok.*;
-
 import org.example.hrms.employee.EmployeeEntity;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(
@@ -24,15 +24,13 @@ public class EmployeeLeaveBalanceEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Many leave balances (year-wise) belong to one employee
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "employee_id")
     private EmployeeEntity employee;
 
     @Column(nullable = false)
     private Integer year;
 
-    // Current balances
     @Column(nullable = false)
     private Integer casualBalance;
 
@@ -42,17 +40,14 @@ public class EmployeeLeaveBalanceEntity {
     @Column(nullable = false)
     private Integer earnedBalance;
 
-    // To track earned leave credit logic
+    @Column(nullable = false)
     private Integer earnedDaysCounter;
 
-    @Max(2000)
-    private String reason;
-
     @Column(nullable = false, updatable = false)
-    private java.time.LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @PrePersist
-    public void prePersist() {
-        this.createdAt = java.time.LocalDateTime.now();
+    void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
 }

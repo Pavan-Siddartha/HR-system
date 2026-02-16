@@ -1,8 +1,9 @@
-package org.example.hrms.leave;
+package org.example.hrms.leave.repository;
 
 import org.example.hrms.enums.LeaveStatus;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.example.hrms.leave.entity.LeaveApplicationEntity;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,19 +11,12 @@ import java.util.List;
 public interface LeaveApplicationRepository
         extends JpaRepository<LeaveApplicationEntity, Long> {
 
-    // Get all leave applications of an employee
-    List<LeaveApplicationEntity> findByEmployeeIdOrderByAppliedAtDesc(Long employeeId);
+    List<LeaveApplicationEntity>
+    findByEmployeeIdOrderByAppliedAtDesc(Long employeeId);
 
-    // Get leave applications by status
-    List<LeaveApplicationEntity> findByEmployeeIdAndStatus(
-            Long employeeId,
-            LeaveStatus status
-    );
-
-    // Check overlapping leave dates (important validation)
     @Query("""
         SELECT COUNT(l) > 0
-        FROM LeaveApplication l
+        FROM LeaveApplicationEntity l
         WHERE l.employee.id = :employeeId
           AND l.status IN ('APPLIED','APPROVED')
           AND (
@@ -32,8 +26,8 @@ public interface LeaveApplicationRepository
           )
     """)
     boolean existsOverlappingLeave(
-            Long employeeId,
-            LocalDate startDate,
-            LocalDate endDate
+            @Param("employeeId") Long employeeId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
     );
 }

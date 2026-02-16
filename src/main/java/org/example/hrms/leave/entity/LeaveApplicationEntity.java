@@ -1,8 +1,7 @@
-package org.example.hrms.leave;
+package org.example.hrms.leave.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import org.example.hrms.employee.EmployeeEntity;
 import org.example.hrms.enums.LeaveStatus;
 import org.example.hrms.enums.LeaveType;
@@ -23,9 +22,8 @@ public class LeaveApplicationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Many leave applications belong to one employee
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "employee_id")
     private EmployeeEntity employee;
 
     @Enumerated(EnumType.STRING)
@@ -48,12 +46,12 @@ public class LeaveApplicationEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime appliedAt;
 
-    private LocalDateTime actionedAt;
+    private LocalDateTime approvedAt;
 
-    private Long approvedBy; // manager id (optional improvement)
+    private String reason;
 
     @PrePersist
-    public void prePersist() {
+    void onApply() {
         this.appliedAt = LocalDateTime.now();
         this.status = LeaveStatus.APPLIED;
     }

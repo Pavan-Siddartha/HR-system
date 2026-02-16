@@ -1,6 +1,7 @@
-package org.example.hrms.leave;
+package org.example.hrms.leave.repository;
 
 import org.example.hrms.employee.EmployeeEntity;
+import org.example.hrms.leave.entity.EmployeeLeaveBalanceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
