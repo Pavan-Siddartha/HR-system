@@ -3,25 +3,29 @@ package org.example.hrms.attendance;
 import lombok.RequiredArgsConstructor;
 import org.example.hrms.attendance.dto.MonthlyAttendanceSummary;
 import org.example.hrms.enums.AttendanceStatus;
+import org.example.hrms.leave.service.LeaveBalanceService;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Year;
 
 @Service
 @RequiredArgsConstructor
 public class AttendanceService {
 
     private final AttendanceRepository attendanceRepository;
+    private final LeaveBalanceService leaveBalanceService;
 
-    private static final int HALF_DAY_THRESHOLD_MINUTES = 240; // 4 hours
+    private static final int HALF_DAY_THRESHOLD_MINUTES = 240; // 4hrs
 
     public void checkIn(Long employeeId) {
 
         AttendanceEntity attendance = attendanceRepository
-                .findByEmployee_Id(
-                        employeeId)
+                .findByEmployee_IdAndAttendanceDate(
+                        employeeId, LocalDate.now())
                 .orElseThrow(() ->
                         new IllegalArgumentException("Not an Employee"));
 
@@ -60,6 +64,10 @@ public class AttendanceService {
             attendance.setStatus(AttendanceStatus.HALF_DAY);
         } else {
             attendance.setStatus(AttendanceStatus.PRESENT);
+            leaveBalanceService.incrementEarnedLeave(
+                    employeeId,
+                    Year.now().getValue()
+            );
         }
 
         attendanceRepository.save(attendance);

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.hrms.employee.EmployeeEntity;
 import org.example.hrms.employee.EmployeeRepository;
 import org.example.hrms.enums.AttendanceStatus;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +22,8 @@ public class AttendanceScheduler {
     private final AttendanceRepository attendanceRepository;
 
     // Runs daily at 12:05 AM
-    @Scheduled(cron = "0 5 0 * * ?")
+    @Scheduled(cron = "${time.schedule}")
+    @EventListener(ApplicationReadyEvent.class)  // recrods created on startup
     public void createDailyAttendance() {
 
         LocalDate today = LocalDate.now();
@@ -30,6 +33,7 @@ public class AttendanceScheduler {
 
         for (EmployeeEntity employee : employees) {
 
+            // to prevent too many records getting created while testing
             if (attendanceRepository.existsByEmployee_IdAndAttendanceDate(
                     employee.getId(), today)) {
                 continue;
