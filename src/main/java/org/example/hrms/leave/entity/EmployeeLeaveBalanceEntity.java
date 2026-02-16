@@ -1,6 +1,7 @@
 package org.example.hrms.leave;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import lombok.*;
 
 import org.example.hrms.employee.EmployeeEntity;
@@ -17,7 +18,7 @@ import org.example.hrms.employee.EmployeeEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmployeeLeaveBalance {
+public class EmployeeLeaveBalanceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +44,9 @@ public class EmployeeLeaveBalance {
 
     // To track earned leave credit logic
     private Integer earnedDaysCounter;
-    // Example: counts PRESENT days toward next earned leave
+
+    @Max(2000)
+    private String reason;
 
     @Column(nullable = false, updatable = false)
     private java.time.LocalDateTime createdAt;

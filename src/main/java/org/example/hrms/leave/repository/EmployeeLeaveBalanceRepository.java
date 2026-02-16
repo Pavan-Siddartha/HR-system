@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EmployeeLeaveBalanceRepository
-        extends JpaRepository<EmployeeLeaveBalance, Long> {
+        extends JpaRepository<EmployeeLeaveBalanceEntity, Long> {
 
-    Optional<EmployeeLeaveBalance>
+    Optional<EmployeeLeaveBalanceEntity>
     findByEmployeeIdAndYear(Long employeeId, Integer year);
 
     boolean existsByEmployeeIdAndYear(Long employeeId, Integer year);
 
-    List<EmployeeLeaveBalance> findByYear(Integer year);
+    List<EmployeeLeaveBalanceEntity> findByYear(Integer year);
 
-    List<EmployeeLeaveBalance> findByEmployee(EmployeeEntity employee);
+    List<EmployeeLeaveBalanceEntity> findByEmployee(EmployeeEntity employee);
 }

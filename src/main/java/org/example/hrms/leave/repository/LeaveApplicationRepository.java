@@ -8,13 +8,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface LeaveApplicationRepository
-        extends JpaRepository<LeaveApplication, Long> {
+        extends JpaRepository<LeaveApplicationEntity, Long> {
 
     // Get all leave applications of an employee
-    List<LeaveApplication> findByEmployeeIdOrderByAppliedAtDesc(Long employeeId);
+    List<LeaveApplicationEntity> findByEmployeeIdOrderByAppliedAtDesc(Long employeeId);
 
     // Get leave applications by status
-    List<LeaveApplication> findByEmployeeIdAndStatus(
+    List<LeaveApplicationEntity> findByEmployeeIdAndStatus(
             Long employeeId,
             LeaveStatus status
     );

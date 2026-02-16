@@ -3,9 +3,9 @@ package org.example.hrms.leave;
 import lombok.RequiredArgsConstructor;
 import org.example.hrms.employee.EmployeeEntity;
 import org.example.hrms.employee.EmployeeRepository;
+import org.example.hrms.leave.repository.EmployeeLeaveBalanceRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
 
@@ -16,14 +16,11 @@ public class LeaveBalanceService {
     private final EmployeeLeaveBalanceRepository balanceRepository;
     private final EmployeeRepository employeeRepository;
 
-    // Default yearly policy (can be externalized later)
+    // Default yearly values
     private static final int YEARLY_CASUAL = 12;
     private static final int YEARLY_SICK = 10;
     private static final int MAX_EARNED_CARRY_FORWARD = 30;
 
-    /* ======================================================
-       1️⃣ Create initial leave balance (on employee hire)
-       ====================================================== */
     public void createInitialLeaveBalance(EmployeeEntity employee) {
 
         int currentYear = Year.now().getValue();
@@ -49,9 +46,6 @@ public class LeaveBalanceService {
         balanceRepository.save(balance);
     }
 
-    /* ======================================================
-       2️⃣ Get leave balance for employee & year
-       ====================================================== */
     public EmployeeLeaveBalance getLeaveBalance(Long employeeId, int year) {
 
         return balanceRepository.findByEmployeeIdAndYear(employeeId, year)
@@ -59,9 +53,7 @@ public class LeaveBalanceService {
                         new IllegalArgumentException("Leave balance not found for year " + year));
     }
 
-    /* ======================================================
-       3️⃣ Reset yearly leave balances (Jan 1 scheduler)
-       ====================================================== */
+
     public void resetYearlyBalances(int newYear) {
 
         List<EmployeeEntity> employees = employeeRepository.findAll();
@@ -90,9 +82,6 @@ public class LeaveBalanceService {
         }
     }
 
-    /* ======================================================
-       4️⃣ Increment earned leave (after 20 PRESENT days)
-       ====================================================== */
     public void incrementEarnedLeave(Long employeeId, int year) {
 
         EmployeeLeaveBalance balance =
@@ -100,7 +89,7 @@ public class LeaveBalanceService {
 
         int counter = balance.getEarnedDaysCounter() + 1;
 
-        if (counter >= 20) {
+        if (counter == 20) {
             balance.setEarnedBalance(balance.getEarnedBalance() + 1);
             balance.setEarnedDaysCounter(0);
         } else {

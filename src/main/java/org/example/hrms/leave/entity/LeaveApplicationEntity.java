@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LeaveApplication {
+public class LeaveApplicationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
