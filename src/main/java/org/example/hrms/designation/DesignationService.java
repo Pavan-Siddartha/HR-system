@@ -3,6 +3,7 @@ package org.example.hrms.designation;
 import lombok.RequiredArgsConstructor;
 import org.example.hrms.designation.dto.CreateDesignationRequest;
 import org.example.hrms.employee.EmployeeRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,9 +30,15 @@ public class DesignationService {
         return designationRepository.save(designation);
     }
 
+
+    @Cacheable(value="designations")
     public List<DesignationEntity> getAllDesignations() {
+
+        System.out.println("first call, fetches from db");
         return designationRepository.findAll();
     }
+
+
 
     public DesignationEntity getDesignationById(Long id) {
         return designationRepository.findById(id)
